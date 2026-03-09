@@ -36,11 +36,33 @@
 							"boolean",
 							"number",
 							"array",
-							"object"
+							"object",
+							"INT32",
+							"INT64",
+							"FLOAT32",
+							"FLOAT64",
+							"DECIMAL",
+							"BOOLEAN",
+							"STRING",
+							"TEXT",
+							"UUID",
+							"DATE",
+							"TIME",
+							"DATETIME",
+							"TIMESTAMP",
+							"TIMESTAMP_TZ",
+							"DURATION",
+							"OBJECT",
+							"ENUM",
+							"UNION",
+							"JSON"
 						]
 					},
 					"description": {
 						"type": "string"
+					},
+					"parameters": {
+						"type": "object"
 					},
 					"constraints": {
 						"type": "object",
