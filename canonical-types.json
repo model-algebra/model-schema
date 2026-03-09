@@ -1,0 +1,175 @@
+{
+  "typeClasses": [
+    "numeric",
+    "string",
+    "date",
+    "compound",
+    "container"
+  ],
+
+  "parameterTypes": {
+    "integer": { "type": "integer" },
+    "number":  { "type": "number" },
+    "string":  { "type": "string" },
+    "boolean": { "type": "boolean" },
+    "array":   { "type": "array" },
+    "object":  { "type": "object" }
+  },
+
+  "types": [
+    {
+      "name": "INT32",
+      "class": "numeric",
+      "parameters": [],
+      "sizeBytes": 4
+    },
+    {
+      "name": "INT64",
+      "class": "numeric",
+      "parameters": [],
+      "sizeBytes": 8
+    },
+    {
+      "name": "FLOAT32",
+      "class": "numeric",
+      "parameters": [],
+      "sizeBytes": 4
+    },
+    {
+      "name": "FLOAT64",
+      "class": "numeric",
+      "parameters": [],
+      "sizeBytes": 8
+    },
+    {
+      "name": "DECIMAL",
+      "class": "numeric",
+      "parameters": [
+        {
+          "name": "precision",
+          "type": "integer",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "scale",
+          "type": "integer",
+          "required": true,
+          "min": 0
+        }
+      ],
+      "sizeBytes": null
+    },
+    {
+      "name": "BOOLEAN",
+      "class": "numeric",
+      "parameters": [],
+      "sizeBytes": 1
+    },
+    {
+      "name": "STRING",
+      "class": "string",
+      "parameters": [
+        {
+          "name": "length",
+          "type": "integer",
+          "required": false,
+          "min": 1
+        }
+      ],
+      "sizeBytes": null
+    },
+    {
+      "name": "TEXT",
+      "class": "string",
+      "parameters": [],
+      "sizeBytes": null
+    },
+    {
+      "name": "UUID",
+      "class": "string",
+      "parameters": [],
+      "sizeBytes": 16
+    },
+    {
+      "name": "DATE",
+      "class": "date",
+      "parameters": [],
+      "sizeBytes": 4
+    },
+    {
+      "name": "TIME",
+      "class": "date",
+      "parameters": [],
+      "sizeBytes": 8
+    },
+    {
+      "name": "DATETIME",
+      "class": "date",
+      "parameters": [],
+      "sizeBytes": 8
+    },
+    {
+      "name": "TIMESTAMP",
+      "class": "date",
+      "parameters": [],
+      "sizeBytes": 8
+    },
+    {
+      "name": "TIMESTAMP_TZ",
+      "class": "date",
+      "parameters": [],
+      "sizeBytes": 12
+    },
+    {
+      "name": "DURATION",
+      "class": "date",
+      "parameters": [],
+      "sizeBytes": 8
+    },
+    {
+      "name": "OBJECT",
+      "class": "compound",
+      "parameters": [
+        {
+          "name": "ref",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "sizeBytes": null
+    },
+    {
+      "name": "ENUM",
+      "class": "compound",
+      "parameters": [
+        {
+          "name": "values",
+          "type": "array",
+          "itemType": "string",
+          "required": true
+        }
+      ],
+      "sizeBytes": null
+    },
+    {
+      "name": "UNION",
+      "class": "compound",
+      "parameters": [
+        {
+          "name": "oneOf",
+          "type": "array",
+          "itemType": "object",
+          "required": true
+        }
+      ],
+      "sizeBytes": null
+    },
+    {
+      "name": "JSON",
+      "class": "compound",
+      "parameters": [],
+      "sizeBytes": null
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "http://example.com/model.schema.json",
+	"title": "Model",
+	"type": "object",
+	"properties": {
+		"metadata": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"version": {
+					"type": "string",
+					"pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+				}
+			},
+			"required": [
+				"name",
+				"version"
+			]
+		},
+		"fields": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"string",
+							"integer",
+							"boolean",
+							"number",
+							"array",
+							"object"
+						]
+					},
+					"description": {
+						"type": "string"
+					},
+					"constraints": {
+						"type": "object",
+						"properties": {
+							"primaryKey": {
+								"type": "boolean"
+							},
+							"nullable": {
+								"type": "boolean"
+							},
+							"required": {
+								"type": "boolean"
+							}
+						}
+					}
+				},
+				"required": [
+					"name",
+					"type"
+				]
+			}
+		}
+	},
+	"required": [
+		"metadata",
+		"fields"
+	]
+}
