@@ -75,6 +75,18 @@
 							},
 							"required": {
 								"type": "boolean"
+							},
+							"foreign_key": {
+								"type": "object",
+								"properties": {
+									"ref": {
+										"type": "string"
+									},
+									"field": {
+										"type": "string"
+									}
+								},
+								"required": ["ref", "field"]
 							}
 						}
 					}
