@@ -23,6 +23,7 @@
         "numeric",
         "string",
         "date",
+        "binary",
         "compound",
         "container"
       ]

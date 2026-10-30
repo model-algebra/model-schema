@@ -3,6 +3,7 @@
     "numeric",
     "string",
     "date",
+    "binary",
     "compound",
     "container"
   ],
@@ -17,6 +18,12 @@
   },
 
   "types": [
+    {
+      "name": "INT16",
+      "class": "numeric",
+      "parameters": [],
+      "sizeBytes": 2
+    },
     {
       "name": "INT32",
       "class": "numeric",
@@ -92,6 +99,12 @@
       "sizeBytes": 16
     },
     {
+      "name": "BYTES",
+      "class": "binary",
+      "parameters": [],
+      "sizeBytes": null
+    },
+    {
       "name": "DATE",
       "class": "date",
       "parameters": [],
@@ -100,31 +113,71 @@
     {
       "name": "TIME",
       "class": "date",
-      "parameters": [],
+      "parameters": [
+        {
+          "name": "precision",
+          "type": "integer",
+          "required": false,
+          "min": 0,
+          "max": 6
+        }
+      ],
       "sizeBytes": 8
     },
     {
       "name": "DATETIME",
       "class": "date",
-      "parameters": [],
+      "parameters": [
+        {
+          "name": "precision",
+          "type": "integer",
+          "required": false,
+          "min": 0,
+          "max": 6
+        }
+      ],
       "sizeBytes": 8
     },
     {
       "name": "TIMESTAMP",
       "class": "date",
-      "parameters": [],
+      "parameters": [
+        {
+          "name": "precision",
+          "type": "integer",
+          "required": false,
+          "min": 0,
+          "max": 6
+        }
+      ],
       "sizeBytes": 8
     },
     {
       "name": "TIMESTAMP_TZ",
       "class": "date",
-      "parameters": [],
+      "parameters": [
+        {
+          "name": "precision",
+          "type": "integer",
+          "required": false,
+          "min": 0,
+          "max": 6
+        }
+      ],
       "sizeBytes": 12
     },
     {
       "name": "DURATION",
       "class": "date",
-      "parameters": [],
+      "parameters": [
+        {
+          "name": "precision",
+          "type": "integer",
+          "required": false,
+          "min": 0,
+          "max": 6
+        }
+      ],
       "sizeBytes": 8
     },
     {
@@ -169,6 +222,19 @@
       "name": "JSON",
       "class": "compound",
       "parameters": [],
+      "sizeBytes": null
+    },
+    {
+      "name": "ARRAY",
+      "class": "container",
+      "parameters": [
+        {
+          "name": "items",
+          "type": "object",
+          "required": true,
+          "description": "Element type descriptor: {\"type\": ..., \"parameters\": {...}}"
+        }
+      ],
       "sizeBytes": null
     }
   ]
