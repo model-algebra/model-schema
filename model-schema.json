@@ -44,6 +44,7 @@
 							"number",
 							"array",
 							"object",
+							"date",
 							"INT16",
 							"INT32",
 							"INT64",

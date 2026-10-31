@@ -65,7 +65,8 @@ The canonical types (`canonical-types.json`):
 | | `JSON` | |
 | container | `ARRAY` | `items`: type descriptor of the elements, e.g. `{ "type": "STRING", "parameters": { "length": 20 } }` |
 
-The lowercase types `string`, `integer`, `boolean`, `number`, `array` and `object` are accepted for older models.
+The lowercase types `string`, `integer`, `boolean`, `number`, `array`, `object` and `date` are accepted for older
+models.
 
 ## Field constraints
 
