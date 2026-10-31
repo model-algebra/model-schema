@@ -113,6 +113,71 @@ A **rule** compares a field with a value or with another field:
 
 `fields` are indexed in order; `where`, a rule, makes the index partial.
 
+## Sorting and filtering
+
+What clients of a model may sort and filter records by. Function and predicate names are names the application
+provides, e.g. a database function or a function on the server.
+
+### On fields
+
+`sortable` and `filterable` take `true` for the default, one definition, or a map of named definitions when there are
+several:
+
+```json
+{ "name": "lastName", "type": "STRING", "parameters": { "length": 100 },
+  "sortable": { "plain": {}, "caseless": { "function": "lower" } },
+  "filterable": {
+    "equals": { "op": "=" },
+    "prefix": { "predicate": "startsWith", "argument": true },
+    "blank": { "predicate": "isBlank" }
+  } }
+```
+
+A **sort definition** (`sortable: true` is `{}`):
+
+| Key | |
+|---|---|
+| `function` | Sort by `function(value, row)` instead of the value |
+| `direction` | Directions clients may sort in: `asc`, `desc` or `both` (default) |
+| `nulls` | Where records without a value go: `first` or `last` |
+
+A **filter definition** has one of `op`, `ops` and `predicate` (`filterable: true` is `{ "op": "=" }`):
+
+| Definition | Keeps records where |
+|---|---|
+| `{ "op": ">=" }` | value `>=` the value the client gives |
+| `{ "ops": [">=", "<="] }` | the same, with an operator the client chooses |
+| `{ "op": "=", "value": "ACTIVE" }` | value `=` `"ACTIVE"`; the client only switches the filter on |
+| `{ "op": ">=", "otherField": "startsAt" }` | value `>=` the value of another field; the client only switches it on |
+| `{ "predicate": "isBlank" }` | `isBlank(value, row)` is true; the client only switches it on |
+| `{ "predicate": "startsWith", "argument": true }` | `startsWith(value, row, argument)` is true, for the argument the client gives |
+
+`function` with `op` or `ops` compares `function(value, row)` instead of the value. `argument` is `true` for a value of
+the field's own type, or a type like the type of a field: `{ "type": "FLOAT64" }`. `op` is one of `=`, `!=`, `<`,
+`<=`, `>`, `>=`, as in rules.
+
+### On models
+
+`sortings` and `filters` are named:
+
+```json
+"sortings": {
+  "byName": [ { "field": "lastName" }, { "field": "firstName" } ],
+  "priority": [ { "function": "priorityOf", "direction": "desc" } ]
+},
+"filters": {
+  "adults": { "field": "age", "op": ">=", "value": 18 },
+  "active": { "predicate": "isActive" },
+  "nearby": { "predicate": "isWithinKm", "argument": { "type": "FLOAT64" } }
+}
+```
+
+A **sort order** is a list of keys, each a `field`, a `function`, or both, with a `direction` (`asc`, the default, or
+`desc`) and `nulls`. A function gets `(value, row)` with a field and `(row)` without.
+
+A **filter** is a rule, or a predicate of the whole record: `predicate(row)`, or `predicate(row, argument)` with an
+`argument` type.
+
 ## Target options
 
 `targets` holds options only one target understands, keyed by target name; other targets ignore them. For

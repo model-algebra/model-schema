@@ -156,6 +156,48 @@
 					},
 					"targets": {
 						"$ref": "#/definitions/targets"
+					},
+					"sortable": {
+						"description": "true for the default; one sort definition; or, for several, a map of named ones",
+						"oneOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"$ref": "#/definitions/sortDefinition"
+							},
+							{
+								"type": "object",
+								"minProperties": 2,
+								"propertyNames": {
+									"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+								},
+								"additionalProperties": {
+									"$ref": "#/definitions/sortDefinition"
+								}
+							}
+						]
+					},
+					"filterable": {
+						"description": "true for the default; one filter definition; or, for several, a map of named ones",
+						"oneOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"$ref": "#/definitions/filterDefinition"
+							},
+							{
+								"type": "object",
+								"minProperties": 2,
+								"propertyNames": {
+									"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+								},
+								"additionalProperties": {
+									"$ref": "#/definitions/filterDefinition"
+								}
+							}
+						]
 					}
 				},
 				"required": [
@@ -261,6 +303,30 @@
 					"name",
 					"fields"
 				]
+			}
+		},
+		"sortings": {
+			"type": "object",
+			"description": "Named sort orders",
+			"propertyNames": {
+				"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+			},
+			"additionalProperties": {
+				"type": "array",
+				"items": {
+					"$ref": "#/definitions/sortKey"
+				},
+				"minItems": 1
+			}
+		},
+		"filters": {
+			"type": "object",
+			"description": "Named filters",
+			"propertyNames": {
+				"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+			},
+			"additionalProperties": {
+				"$ref": "#/definitions/modelFilter"
 			}
 		}
 	},
@@ -387,6 +453,277 @@
 			"additionalProperties": {
 				"type": "object"
 			}
+		},
+		"functionName": {
+			"type": "string",
+			"pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+			"description": "Name of a function or predicate the application provides"
+		},
+		"argumentType": {
+			"type": "object",
+			"description": "Type of the value a client gives a predicate, as fields declare types",
+			"properties": {
+				"type": {
+					"type": "string"
+				},
+				"parameters": {
+					"type": "object"
+				}
+			},
+			"required": [
+				"type"
+			],
+			"additionalProperties": false
+		},
+		"sortDefinition": {
+			"type": "object",
+			"description": "How records can be sorted by a field",
+			"properties": {
+				"function": {
+					"$ref": "#/definitions/functionName",
+					"description": "Sort by function(value, row) instead of the value"
+				},
+				"direction": {
+					"type": "string",
+					"enum": [
+						"asc",
+						"desc",
+						"both"
+					],
+					"description": "Directions clients may sort in (default: both)"
+				},
+				"nulls": {
+					"type": "string",
+					"enum": [
+						"first",
+						"last"
+					],
+					"description": "Where records without a value go"
+				}
+			},
+			"additionalProperties": false
+		},
+		"filterDefinition": {
+			"type": "object",
+			"description": "How records can be filtered by a field",
+			"properties": {
+				"op": {
+					"$ref": "#/definitions/rule/properties/op",
+					"description": "Compare the value with the value the client gives, or with value or otherField when given"
+				},
+				"ops": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/rule/properties/op"
+					},
+					"minItems": 1,
+					"uniqueItems": true,
+					"description": "Operators the client chooses from, comparing the value with the value the client gives"
+				},
+				"value": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number"
+						},
+						{
+							"type": "boolean"
+						}
+					],
+					"description": "Fixed value to compare with: the client only switches the filter on"
+				},
+				"otherField": {
+					"type": "string",
+					"description": "Field to compare with: the client only switches the filter on"
+				},
+				"function": {
+					"$ref": "#/definitions/functionName",
+					"description": "Compare function(value, row) instead of the value"
+				},
+				"predicate": {
+					"$ref": "#/definitions/functionName",
+					"description": "Keep records for which predicate(value, row) or predicate(value, row, argument) is true"
+				},
+				"argument": {
+					"description": "The value the client gives the predicate: true for one of the type of the field, or a type; without it the client only switches the filter on",
+					"oneOf": [
+						{
+							"const": true
+						},
+						{
+							"$ref": "#/definitions/argumentType"
+						}
+					]
+				}
+			},
+			"additionalProperties": false,
+			"oneOf": [
+				{
+					"required": [
+						"op"
+					],
+					"not": {
+						"anyOf": [
+							{
+								"required": [
+									"ops"
+								]
+							},
+							{
+								"required": [
+									"predicate"
+								]
+							},
+							{
+								"required": [
+									"argument"
+								]
+							},
+							{
+								"required": [
+									"value",
+									"otherField"
+								]
+							}
+						]
+					}
+				},
+				{
+					"required": [
+						"ops"
+					],
+					"not": {
+						"anyOf": [
+							{
+								"required": [
+									"op"
+								]
+							},
+							{
+								"required": [
+									"predicate"
+								]
+							},
+							{
+								"required": [
+									"argument"
+								]
+							},
+							{
+								"required": [
+									"value"
+								]
+							},
+							{
+								"required": [
+									"otherField"
+								]
+							}
+						]
+					}
+				},
+				{
+					"required": [
+						"predicate"
+					],
+					"not": {
+						"anyOf": [
+							{
+								"required": [
+									"op"
+								]
+							},
+							{
+								"required": [
+									"ops"
+								]
+							},
+							{
+								"required": [
+									"value"
+								]
+							},
+							{
+								"required": [
+									"otherField"
+								]
+							},
+							{
+								"required": [
+									"function"
+								]
+							}
+						]
+					}
+				}
+			]
+		},
+		"sortKey": {
+			"type": "object",
+			"description": "One key of a sort order: a field, or a function of the whole record",
+			"properties": {
+				"field": {
+					"type": "string"
+				},
+				"function": {
+					"$ref": "#/definitions/functionName",
+					"description": "function(value, row) with a field, function(row) without"
+				},
+				"direction": {
+					"type": "string",
+					"enum": [
+						"asc",
+						"desc"
+					],
+					"description": "Default: asc"
+				},
+				"nulls": {
+					"type": "string",
+					"enum": [
+						"first",
+						"last"
+					]
+				}
+			},
+			"anyOf": [
+				{
+					"required": [
+						"field"
+					]
+				},
+				{
+					"required": [
+						"function"
+					]
+				}
+			],
+			"additionalProperties": false
+		},
+		"modelFilter": {
+			"description": "A filter of the model: a rule, or a predicate of the whole record",
+			"oneOf": [
+				{
+					"$ref": "#/definitions/rule"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"predicate": {
+							"$ref": "#/definitions/functionName",
+							"description": "Keep records for which predicate(row) or predicate(row, argument) is true"
+						},
+						"argument": {
+							"$ref": "#/definitions/argumentType"
+						}
+					},
+					"required": [
+						"predicate"
+					],
+					"additionalProperties": false
+				}
+			]
 		}
 	}
 }
